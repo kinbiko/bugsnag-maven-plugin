@@ -37,21 +37,7 @@ public class BugsnagDeployMojo extends AbstractMojo {
     @Parameter(property = "deploy.appVersion", defaultValue = "${project.version}")
     private String appVersion;
 
-    private DeployRequestMaker requestMaker;
-
-    /**
-     * Normal production constructor.
-     */
-    public BugsnagDeployMojo() {
-        this.requestMaker = new DefaultDeployRequestMaker();
-    }
-
-    /**
-     * Test constructor.
-     */
-    BugsnagDeployMojo(final DeployRequestMaker requestMaker) {
-        this.requestMaker = requestMaker;
-    }
+    private DeployRequestMaker requestMaker = new DefaultDeployRequestMaker();;
 
     /**
      * If the API key has been properly configured, this method will send a deploy notification
@@ -94,5 +80,12 @@ public class BugsnagDeployMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to shutdown bugsnag-maven-plugin cleanly.");
         }
+    }
+
+    /**
+     * For testing purposes only.
+     */
+    public void setRequestMaker(final DeployRequestMaker requestMaker) {
+        this.requestMaker = requestMaker;
     }
 }
