@@ -7,7 +7,7 @@
     <version>1.0.0</version>
     <packaging>maven-plugin</packaging>
 
-    <name>bugsnag-maven-plugin Maven Plugin</name>
+    <name>Bugsnag Maven Plugin</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

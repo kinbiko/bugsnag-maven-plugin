@@ -12,18 +12,27 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.IOException;
 
 /**
- * Mojo responsible for sending deploy notifications to Bugsnag,
+ * Goal responsible for sending deploy notifications to Bugsnag,
  * based on the plugin configuration.
  */
 @Mojo(name = "deploy")
 public class BugsnagDeployMojo extends AbstractMojo {
 
+    /**
+     * This value can be found under your Bugsnag project's Settings menu.
+     */
     @Parameter(property = "deploy.apiKey", required = true)
     private String apiKey;
 
+    /**
+     * Default value: 'production'
+     */
     @Parameter(property = "deploy.releaseStage", defaultValue = "production")
     private String releaseStage;
 
+    /**
+     * Default value: Same as the maven project version.
+     */
     @Parameter(property = "deploy.appVersion", defaultValue = "${project.version}")
     private String appVersion;
 
