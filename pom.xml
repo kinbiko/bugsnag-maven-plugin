@@ -37,12 +37,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Lightweight HTTP request library -->
         <dependency>
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
         </dependency>
-        <!-- Remove if possible, required for unirest -->
+        <!-- Required for unirest -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
