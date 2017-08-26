@@ -1,19 +1,28 @@
 # bugsnag-maven-plugin
 
-[![Travis CI](https://travis-ci.org/kinbiko/bugsnag-maven-plugin.svg?branch=master)](https://travis-ci.org/kinbiko/bugsnag-maven-plugin/)
+[![Build Status](https://travis-ci.org/kinbiko/bugsnag-maven-plugin.svg?branch=master)](https://travis-ci.org/kinbiko/bugsnag-maven-plugin)
 
 This [Apache Maven](https://maven.apache.org) plugin informs [Bugsnag](https://www.bugsnag.com) of a new deployment, requiring only minimum configuration.
 
 ## Usage
 
-Add the following plugin dependency to your pom.xml
+Under your `build>plugins` tag add the following.
 
 ```
-<dependency>
+<plugin>
   <groupId>com.kinbiko</groupId>
   <artifactId>bugsnag-maven-plugin</artifactId>
-  <version>{enter version here}</version>
-</dependency>
+  <version>{See the GitHub releases tab for versions}</version>
+  <configuration>
+    <!-- Required: -->
+    <apiKey>{Your API key here}</apiKey>
+    <!-- Optional: -->
+    <appVersion>{E.g. 4.1.5}</appVersion> <!-- default: project.version -->
+    <releaseStage>{E.g. staging}</releaseStage> <!-- default: production -->
+  </configuration>
+</plugin>
 ```
 
-See the [GitHub releases](https://github.com/kinbiko/bugsnag-maven-plugin/releases) tab for valid version numbers.
+You can then send notify Bugsnag that you have deployed a new version of you application through
+
+```mvn bugsnag:deploy```
