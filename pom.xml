@@ -4,7 +4,7 @@
 
     <groupId>com.kinbiko</groupId>
     <artifactId>bugsnag-maven-plugin</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>bugsnag-maven-plugin Maven Plugin</name>
