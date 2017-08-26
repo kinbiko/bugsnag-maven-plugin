@@ -72,7 +72,6 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <goalPrefix>bugsnag-maven-plugin</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
                 <executions>
