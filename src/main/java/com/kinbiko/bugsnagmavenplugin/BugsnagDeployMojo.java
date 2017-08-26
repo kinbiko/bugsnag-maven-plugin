@@ -1,6 +1,5 @@
-package com.kinbiko;
+package com.kinbiko.bugsnagmavenplugin;
 
-import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -10,6 +9,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Goal responsible for sending deploy notifications to Bugsnag,
@@ -36,6 +37,22 @@ public class BugsnagDeployMojo extends AbstractMojo {
     @Parameter(property = "deploy.appVersion", defaultValue = "${project.version}")
     private String appVersion;
 
+    private DeployRequestMaker requestMaker;
+
+    /**
+     * Normal production constructor.
+     */
+    public BugsnagDeployMojo() {
+        this.requestMaker = new DefaultDeployRequestMaker();
+    }
+
+    /**
+     * Test constructor.
+     */
+    BugsnagDeployMojo(final DeployRequestMaker requestMaker) {
+        this.requestMaker = requestMaker;
+    }
+
     /**
      * If the API key has been properly configured, this method will send a deploy notification
      * to Bugsnag, otherwise an error message will be displayed.
@@ -48,7 +65,12 @@ public class BugsnagDeployMojo extends AbstractMojo {
 
     private void sendDeployNotification() {
         try {
-            final HttpResponse<String> res = makeHttpCall();
+            final Map<String, String> params = new HashMap<String, String>() {{
+                put("apiKey", apiKey);
+                put("releaseStage", releaseStage);
+                put("appVersion", appVersion);
+            }};
+            final DeployResponse res = requestMaker.makeRequest(params);
             logResults(res);
         } catch (final UnirestException e) {
             getLog().error("Something went wrong internally with the plugin. Enable debug logging for more information");
@@ -56,21 +78,13 @@ public class BugsnagDeployMojo extends AbstractMojo {
         }
     }
 
-    private void logResults(final HttpResponse<String> res) {
-        if (res.getStatus() > 400)
-            getLog().error("Failed to send deploy notification: " + res.getStatusText());
-        else if (res.getStatus() == 400)
+    private void logResults(final DeployResponse res) {
+        if (res.getStatusCode() > 400)
+            getLog().error("Failed to send deploy notification: " + res.getStatusMessage());
+        else if (res.getStatusCode() == 400)
             getLog().error("Invalid configuration. Ensure the API key is valid.");
         else
             getLog().info("Deploy notification successful");
-    }
-
-    private HttpResponse<String> makeHttpCall() throws UnirestException {
-        return Unirest.post("https://notify.bugsnag.com/deploy")
-                .field("apiKey", apiKey)
-                .field("releaseStage", releaseStage)
-                .field("appVersion", appVersion)
-                .asString();
     }
 
     private void shutdown() throws MojoExecutionException {
