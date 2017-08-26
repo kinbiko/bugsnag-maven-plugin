@@ -23,6 +23,10 @@ Under your `build>plugins` tag add the following.
 </plugin>
 ```
 
-You can then send notify Bugsnag that you have deployed a new version of you application through
+You can then notify Bugsnag that you have deployed a new version of you application through
 
 ```mvn bugsnag:deploy```
+
+## License
+
+MIT
