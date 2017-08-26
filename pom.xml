@@ -117,4 +117,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-kinbiko-bugsnag-maven-plugin</id>
+            <name>kinbiko-bugsnag-maven-plugin</name>
+            <url>https://api.bintray.com/maven/kinbiko/bugsnag-maven-plugin/bugsnag-maven-plugin/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
 </project>
