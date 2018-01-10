@@ -1,4 +1,4 @@
-package com.kinbiko.bugsnagmavenplugin;
+package com.kinbiko.bugsnagmavenplugin.deploys;
 
 /**
  * Bugsnag's deploy HTTP response.

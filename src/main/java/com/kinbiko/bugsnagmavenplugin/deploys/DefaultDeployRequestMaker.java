@@ -1,4 +1,4 @@
-package com.kinbiko.bugsnagmavenplugin;
+package com.kinbiko.bugsnagmavenplugin.deploys;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
