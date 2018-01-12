@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 /**
- * Object mapper for builds.
+ * Object mapper for serializing requests and deserializing responses for the build API.
  */
 public class BuildsObjectMapper implements com.mashape.unirest.http.ObjectMapper {
 
-    private ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
     public <T> T readValue(String value, Class<T> type) {

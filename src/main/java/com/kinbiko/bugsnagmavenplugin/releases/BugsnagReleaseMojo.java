@@ -8,7 +8,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +33,7 @@ public class BugsnagReleaseMojo extends AbstractMojo {
 
     /**
      * The release stage to release to.
+     * Is ignored if skipReleaseStage is true.
      * Default value: 'production'
      */
     @Parameter(property = "release.releaseStage", defaultValue = "production")
@@ -65,7 +65,7 @@ public class BugsnagReleaseMojo extends AbstractMojo {
     /**
      * Whether to automatically associate this build with new any new error events.
      */
-    @Parameter(property = "releases.autoAssignRelease", defaultValue = "false")
+    @Parameter(property = "releases.autoAssignRelease")
     private Boolean autoAssignRelease;
 
     /**
@@ -95,16 +95,33 @@ public class BugsnagReleaseMojo extends AbstractMojo {
         }
     }
 
-    private Map<String, Object> collectConfig() {
-        final Map<String, Object> params = new HashMap<>();
-        params.put("apiKey", apiKey);
-        params.put("appVersion", appVersion);
-        params.put("releaseStage", releaseStage);
-        params.put("builderName", builderName);
-        params.put("metadata", metadata);
-        params.put("sourceControl", sourceControl);
-        params.put("autoAssignRelease", autoAssignRelease);
-        return params;
+    private BuildApiRequest collectConfig() {
+        validateConfig();
+        final BuildApiRequest req = new BuildApiRequest();
+        req.setApiKey(apiKey);
+        req.setAppVersion(appVersion);
+        if (!skipReleaseStage)
+            req.setReleaseStage(releaseStage);
+        req.setBuilderName(builderName);
+        req.setMetadata(metadata);
+        req.setSourceControl(makeSourceControl(sourceControl));
+        req.setAutoAssignRelease(autoAssignRelease);
+        return req;
+    }
+
+    private SourceControl makeSourceControl(final Map<String, String> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+        final SourceControl sourceControl = new SourceControl();
+        sourceControl.setProvider(map.get("provider"));
+        sourceControl.setRepository(map.get("repository"));
+        sourceControl.setRevision(map.get("revision"));
+        return sourceControl;
+    }
+
+    private void validateConfig() {
+        //TODO:
     }
 
     private void logResults(final BuildApiResponse res) {
