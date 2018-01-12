@@ -25,7 +25,7 @@ for information around what each property means.
     <appVersion>{E.g. 4.1.5}</appVersion> <!-- default: project.version -->
 
     <!-- Optional: -->
-    <builderName>{E.g. Malcolm Reynolds}</builderName> <!-- default: {Hostname} -->
+    <builderName>{E.g. Malcolm Reynolds}</builderName> <!-- default: {user.name} -->
     <metadata> <!-- no default value -->
       <!-- Add any metadata you want here. For example: -->
       <myProp>my value</myProp>
