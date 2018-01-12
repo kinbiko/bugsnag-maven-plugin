@@ -7,8 +7,6 @@ This [Apache Maven](https://maven.apache.org) plugin informs [Bugsnag](https://w
 
 ## Usage
 
-### Releases
-
 Under your `build>plugins` tag add the following.
 
 Please see [The official docs](https://bugsnagbuildapi.docs.apiary.io/#reference/0/build/notify-of-a-build)
@@ -47,10 +45,10 @@ You can notify Bugsnag about a new release of your application through:
 mvn bugsnag:release
 ```
 
-You may also optionally drop the default `releaseStage` with `--no-release-stage`
+You may also optionally drop the default `releaseStage` with `-Drelease.skipReleaseStage=true`
 
 ```bash
-mvn bugsnag:release --no-release-stage
+mvn bugsnag:release -Drelease.skipReleaseStage=true
 ```
 
 ## License
