@@ -9,6 +9,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,6 +63,12 @@ public class BugsnagReleaseMojo extends AbstractMojo {
     private Map<String, String> sourceControl;
 
     /**
+     * Whether to automatically associate this build with new any new error events.
+     */
+    @Parameter(property = "releases.autoAssignRelease", defaultValue = "false")
+    private Boolean autoAssignRelease;
+
+    /**
      * Flag for not setting the default value of the releaseStage.
      * Can be used either as an entry in pom.xml or as a command line arugment:
      * <pre>mvn bugsnag:release -Drelease.skipReleaseStage=true</pre>
@@ -81,28 +88,41 @@ public class BugsnagReleaseMojo extends AbstractMojo {
 
     private void sendReleaseNotification() {
         try {
-            final Map<String, Object> params = new HashMap<>();
-            params.put("apiKey", apiKey);
-            params.put("appVersion", appVersion);
-            params.put("releaseStage", releaseStage);
-            params.put("builderName", builderName);
-            params.put("metadata", metadata);
-            params.put("sourceControl", sourceControl);
-            final BuildApiResponse res = requestMaker.makeRequest(params);
-            logResults(res);
+            logResults(requestMaker.makeRequest(collectConfig()));
         } catch (final UnirestException e) {
             getLog().error("Something went wrong internally with the plugin. Enable debug logging for more information");
             getLog().debug(e);
         }
     }
 
+    private Map<String, Object> collectConfig() {
+        final Map<String, Object> params = new HashMap<>();
+        params.put("apiKey", apiKey);
+        params.put("appVersion", appVersion);
+        params.put("releaseStage", releaseStage);
+        params.put("builderName", builderName);
+        params.put("metadata", metadata);
+        params.put("sourceControl", sourceControl);
+        params.put("autoAssignRelease", autoAssignRelease);
+        return params;
+    }
+
     private void logResults(final BuildApiResponse res) {
-        if (res.getStatusCode() > 400)
-            getLog().error("Failed to send release notification: " + res.getStatusMessage());
-        else if (res.getStatusCode() != 400)
-            getLog().error("Invalid configuration. Ensure the API key is valid, and app version is present.");
-        else
-            getLog().info("Release notification successful");
+        if ("ok".equals(res.getStatus())) {
+            getLog().info("Successfully reported build to Bugsnag!");
+        } else {
+            getLog().error("Something went wrong reporting build to Bugsnag.");
+            final List<String> errors = res.getErrors();
+            if (errors != null) {
+                errors.forEach(error -> getLog().error(error));
+            } else {
+                getLog().error("Unknown failure.");
+            }
+        }
+        final List<String> warnings = res.getWarnings();
+        if (warnings != null) {
+            warnings.forEach(warning -> getLog().warn(warning));
+        }
     }
 
     private void shutdown() throws MojoExecutionException {

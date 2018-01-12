@@ -1,22 +1,36 @@
 package com.kinbiko.bugsnagmavenplugin.releases;
 
+import java.util.List;
+
+/**
+ * Representing the result of a call to the Build API.
+ */
 class BuildApiResponse {
-    private int statusCode;
-    private String statusMessage;
+    private String status;
+    private List<String> errors;
+    private List<String> warnings;
 
-    public int getStatusCode() {
-        return statusCode;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getStatusMessage() {
-        return statusMessage;
+    public List<String> getErrors() {
+        return errors;
     }
 
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
+    }
+
+    public List<String> getWarnings() {
+        return warnings;
+    }
+
+    public void setWarnings(List<String> warnings) {
+        this.warnings = warnings;
     }
 }

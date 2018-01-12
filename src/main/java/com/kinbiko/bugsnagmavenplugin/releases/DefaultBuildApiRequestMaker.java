@@ -1,7 +1,5 @@
 package com.kinbiko.bugsnagmavenplugin.releases;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -14,20 +12,18 @@ import static com.kinbiko.bugsnagmavenplugin.releases.JSONConverter.makeBody;
  */
 public class DefaultBuildApiRequestMaker implements BuildApiRequestMaker {
 
+    private static final BuildsObjectMapper OBJECT_MAPPER = new BuildsObjectMapper();
+
+    DefaultBuildApiRequestMaker() {
+        Unirest.setObjectMapper(OBJECT_MAPPER);
+    }
+
+    private static final String BUILD_URL = "https://build.bugsnag.com/";
+
     @Override
     public BuildApiResponse makeRequest(final Map<String, Object> requestBody) throws UnirestException {
-        final HttpResponse<JsonNode> res = Unirest.post("http://localhost:3000/")
+        return Unirest.post(BUILD_URL)
                 .header("Content-Type", "application/json")
-                .body(makeBody(requestBody)).asJson();
-        return convert(res);
+                .body(makeBody(requestBody)).asObject(BuildApiResponse.class).getBody();
     }
-
-    private BuildApiResponse convert(HttpResponse<JsonNode> res) {
-        final BuildApiResponse buildResponse = new BuildApiResponse();
-        buildResponse.setStatusCode(res.getStatus());
-        final String status = (String) res.getBody().getObject().get("status");
-        buildResponse.setStatusMessage(status);
-        return buildResponse;
-    }
-
 }
