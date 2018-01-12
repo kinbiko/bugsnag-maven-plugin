@@ -20,9 +20,9 @@ for information around what each property means.
   <configuration>
     <!-- Required: -->
     <apiKey>{Your API key here}</apiKey>
-    <appVersion>{E.g. 4.1.5}</appVersion> <!-- default: project.version -->
 
     <!-- Optional: -->
+    <appVersion>{E.g. 4.1.5}</appVersion> <!-- default: project.version -->
     <builderName>{E.g. Malcolm Reynolds}</builderName> <!-- default: {user.name} -->
     <metadata> <!-- no default value -->
       <!-- Add any metadata you want here. For example: -->
