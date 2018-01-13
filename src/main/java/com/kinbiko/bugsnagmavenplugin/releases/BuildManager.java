@@ -44,7 +44,7 @@ class BuildManager {
     private void shutdown() throws MojoExecutionException {
         try {
             Unirest.shutdown(); //According to the unirest documentation this call is required after use.
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new MojoExecutionException("Unable to shutdown bugsnag-maven-plugin cleanly.");
         }
     }

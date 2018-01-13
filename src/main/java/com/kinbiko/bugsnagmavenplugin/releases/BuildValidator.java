@@ -30,7 +30,7 @@ class BuildValidator {
                 invalidate("The repository must be specified whenever source control is specified.");
             }
 
-            if (config.sourceControl.get("provider") == null) {
+            if (isEmpty(config.sourceControl.get("provider"))) {
                 logger.warn("The provider may not be identifiable from the URL. Suggest configuring provider. " + ADVICE);
             }
         }

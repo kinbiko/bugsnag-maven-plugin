@@ -4,7 +4,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 /**
- * The default build API request maker using unirest.
+ * The build API request maker using unirest.
  */
 class BuildApiRequestMaker {
 

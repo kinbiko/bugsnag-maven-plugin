@@ -22,18 +22,19 @@ for information around what each property means.
     <apiKey>{Your API key here}</apiKey>
 
     <!-- Optional: -->
-    <appVersion>{E.g. 4.1.5}</appVersion> <!-- default: project.version -->
-    <builderName>{E.g. Malcolm Reynolds}</builderName> <!-- default: {user.name} -->
+    <appVersion>{E.g. 4.1.5}</appVersion> <!-- default: ${project.version} -->
+    <builderName>{E.g. Malcolm Reynolds}</builderName> <!-- default: ${user.name} -->
     <metadata> <!-- no default value -->
-      <!-- Add any metadata you want here. For example: -->
+      <!-- Add any metadata you want here. E.g. -->
       <myProp>my value</myProp>
     </metadata>
     <sourceControl> <!-- no default value -->
-      <repository>{E.g. https://github.com/kinbiko/bugsnag-maven-plugin}</repository>
       <provider>{E.g. github}</provider> <!-- one of: 'github', 'github-enterprise', 'bitbucket', 'bitbucket-server', 'gitlab', 'gitlab-onpremise' -->
+      <!-- Required when sourceControl is defined: -->
+      <repository>{E.g. https://github.com/kinbiko/bugsnag-maven-plugin}</repository>
       <revision>{E.g. d2a7b36}</revision> <!-- Short or long SHA-1 hash both supported -->
     </sourceControl>
-    <releaseStage>{E.g. staging}</releaseStage> <!-- default: production -->
+    <releaseStage>{E.g. staging}</releaseStage> <!-- default: 'production' -->
     <autoAssignRelease>true</autoAssignRelease> <!-- no default value -->
   </configuration>
 </plugin>
@@ -50,6 +51,8 @@ You may also optionally drop the default `releaseStage` with `-Drelease.skipRele
 ```bash
 mvn bugsnag:release -Drelease.skipReleaseStage=true
 ```
+
+Alternatively, this can be configured similar to the above config properties with `<skipReleaseStage>true</skipReleaseStage>`.
 
 ## License
 

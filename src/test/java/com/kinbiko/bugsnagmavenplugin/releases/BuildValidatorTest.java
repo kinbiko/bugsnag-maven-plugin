@@ -45,4 +45,17 @@ public class BuildValidatorTest {
         target.validateConfig();
     }
 
+    @Test
+    public void happyPath() {
+        config.sourceControl = new HashMap<String, String>() {{
+            put("provider", "github");
+            put("repository", "https://github.com/kinbiko/bugsnag-maven-plugin");
+            put("revision", "dab212b");
+        }};
+        config.apiKey = "api key";
+
+        target.validateConfig();
+    }
+
+
 }
