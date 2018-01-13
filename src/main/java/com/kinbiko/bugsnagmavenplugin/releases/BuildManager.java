@@ -19,11 +19,11 @@ class BuildManager {
     private final BuildConverter buildConverter;
     private final BuildReporter buildReporter;
 
-    BuildManager(final Log logger, final ReleaseMojo config) {
-        this.logger = logger;
+    BuildManager(final ReleaseMojo config) {
+        this.logger = config.getLog();
         this.config = config;
-        this.buildValidator = new BuildValidator(logger, config);
-        this.buildConverter = new BuildConverter(logger, config);
+        this.buildValidator = new BuildValidator(config);
+        this.buildConverter = new BuildConverter(config);
         this.buildReporter = new BuildReporter(logger);
     }
 
@@ -43,8 +43,7 @@ class BuildManager {
 
     private void shutdown() throws MojoExecutionException {
         try {
-            //According to the unirest documentation this call is required after use.
-            Unirest.shutdown();
+            Unirest.shutdown(); //According to the unirest documentation this call is required after use.
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to shutdown bugsnag-maven-plugin cleanly.");
         }

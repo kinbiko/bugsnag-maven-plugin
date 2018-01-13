@@ -76,6 +76,6 @@ public class ReleaseMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        new BuildManager(getLog(), this).orchestrateRelease();
+        new BuildManager(this).orchestrateRelease();
     }
 }

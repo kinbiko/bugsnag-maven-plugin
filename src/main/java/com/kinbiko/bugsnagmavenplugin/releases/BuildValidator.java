@@ -6,31 +6,28 @@ import org.apache.maven.plugin.logging.Log;
  * Class for validation of the properties the user has configured.
  */
 class BuildValidator {
-    private static final String ADVICE = "See https://github.com/kinbiko/bugsnag-maven-plugin/blob/master/README.md#usage for more information on how to configure.";
+    private static final String ADVICE = "See https://github.com/kinbiko/bugsnag-maven-plugin/blob/master/README.md#usage for more information on how to configure this setting.";
 
     private final Log logger;
     private final ReleaseMojo config;
 
-    BuildValidator(final Log logger, final ReleaseMojo config) {
-        this.logger = logger;
+    BuildValidator(final ReleaseMojo config) {
         this.config = config;
+        this.logger = config.getLog();
     }
 
     void validateConfig() {
         if (config.apiKey == null || "".equals(config.apiKey)) {
-            logger.error("API key must be set. " + ADVICE);
-            invalidate();
+            invalidate("API key must be set.");
         }
 
         if (config.sourceControl != null && !config.sourceControl.isEmpty()) {
-            if (config.sourceControl.get("revision") == null) {
-                logger.error("The revision must be specified whenever source control is specified. " + ADVICE);
-                invalidate();
+            if (isEmpty(config.sourceControl.get("revision"))) {
+                invalidate("The revision must be specified whenever source control is specified.");
             }
 
-            if (config.sourceControl.get("repository") == null) {
-                logger.error("The repository must be specified whenever source control is specified. " + ADVICE);
-                invalidate();
+            if (isEmpty(config.sourceControl.get("repository"))) {
+                invalidate("The repository must be specified whenever source control is specified.");
             }
 
             if (config.sourceControl.get("provider") == null) {
@@ -39,7 +36,12 @@ class BuildValidator {
         }
     }
 
-    private void invalidate() {
+    private boolean isEmpty(final String val) {
+        return null == val || "".equals(val);
+    }
+
+    private void invalidate(final String message) {
+        logger.error(message + " " + ADVICE);
         throw new RuntimeException("Validation error.");
     }
 }

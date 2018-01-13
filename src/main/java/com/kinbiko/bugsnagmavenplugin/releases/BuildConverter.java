@@ -12,9 +12,9 @@ class BuildConverter {
     private final Log logger;
     private final ReleaseMojo config;
 
-    BuildConverter(Log logger, ReleaseMojo config) {
-        this.logger = logger;
+    BuildConverter(ReleaseMojo config) {
         this.config = config;
+        this.logger = config.getLog();
     }
 
     BuildApiRequest makeBuildApiRequest() {
