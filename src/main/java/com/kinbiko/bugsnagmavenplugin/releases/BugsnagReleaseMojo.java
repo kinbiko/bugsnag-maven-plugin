@@ -17,6 +17,8 @@ import java.util.Map;
 @Mojo(name = "release", requiresOnline = true)
 public class BugsnagReleaseMojo extends AbstractMojo {
 
+    private static final String ADVICE = "See https://github.com/kinbiko/bugsnag-maven-plugin/blob/master/README.md#usage for more information on how to configure.";
+
     /**
      * The API key of your Bugsnag project.
      * This value can be found under your Bugsnag project's Settings menu.
@@ -88,20 +90,23 @@ public class BugsnagReleaseMojo extends AbstractMojo {
 
     private void sendReleaseNotification() {
         try {
-            logResults(requestMaker.makeRequest(collectConfig()));
+            validateConfig();
+            logResults(requestMaker.makeRequest(makeBuildApiRequest()));
         } catch (final UnirestException e) {
-            getLog().error("Something went wrong internally with the plugin. Enable debug logging for more information");
+            getLog().error("Something went wrong internally with the plugin. Make sure you are connected to the internet.");
             getLog().debug(e);
         }
     }
 
-    private BuildApiRequest collectConfig() {
-        validateConfig();
+    private BuildApiRequest makeBuildApiRequest() {
         final BuildApiRequest req = new BuildApiRequest();
         req.setApiKey(apiKey);
         req.setAppVersion(appVersion);
-        if (!skipReleaseStage)
+        if (skipReleaseStage) {
+            getLog().info("Not specifying the release stage.");
+        } else {
             req.setReleaseStage(releaseStage);
+        }
         req.setBuilderName(builderName);
         req.setMetadata(metadata);
         req.setSourceControl(makeSourceControl(sourceControl));
@@ -110,7 +115,7 @@ public class BugsnagReleaseMojo extends AbstractMojo {
     }
 
     private SourceControl makeSourceControl(final Map<String, String> map) {
-        if (map == null || map.isEmpty()) {
+        if (!sourceControlPresent()) {
             return null;
         }
         final SourceControl sourceControl = new SourceControl();
@@ -121,25 +126,52 @@ public class BugsnagReleaseMojo extends AbstractMojo {
     }
 
     private void validateConfig() {
-        //TODO:
+        if (apiKey == null || "".equals(apiKey)) {
+            getLog().error("API key must be set. " + ADVICE);
+            invalidate();
+        }
+
+        if (sourceControlPresent()) {
+            if (sourceControl.get("revision") == null) {
+                getLog().error("The revision must be specified whenever source control is specified. " + ADVICE);
+                invalidate();
+            }
+
+            if (sourceControl.get("repository") == null) {
+                getLog().error("The repository must be specified whenever source control is specified. " + ADVICE);
+                invalidate();
+            }
+
+            if (sourceControl.get("provider") == null) {
+                getLog().warn("The provider may not be identifiable from the URL. Suggest configuring provider. " + ADVICE);
+            }
+        }
     }
 
     private void logResults(final BuildApiResponse res) {
         if ("ok".equals(res.getStatus())) {
-            getLog().info("Successfully reported build to Bugsnag!");
+            getLog().info("Successfully reported release to Bugsnag!");
         } else {
-            getLog().error("Something went wrong reporting build to Bugsnag.");
+            getLog().error("Something went wrong reporting release to Bugsnag.");
             final List<String> errors = res.getErrors();
             if (errors != null) {
                 errors.forEach(error -> getLog().error(error));
             } else {
-                getLog().error("Unknown failure.");
+                getLog().error("Unknown failure when reporting release to Bugsnag.");
             }
         }
         final List<String> warnings = res.getWarnings();
         if (warnings != null) {
             warnings.forEach(warning -> getLog().warn(warning));
         }
+    }
+
+    private boolean sourceControlPresent() {
+        return sourceControl != null && !sourceControl.isEmpty();
+    }
+
+    private void invalidate() {
+        throw new RuntimeException("Validation error.");
     }
 
     private void shutdown() throws MojoExecutionException {

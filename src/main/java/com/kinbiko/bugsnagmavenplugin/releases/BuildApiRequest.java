@@ -7,10 +7,6 @@ import java.util.Map;
  */
 class BuildApiRequest {
 
-    //Shh! Secret property.
-    //TODO: Make final if the serializer accepts it
-    private String buildTool = "bugsnag-maven-plugin";
-
     private String apiKey;
     private String appVersion;
     private String builderName;
@@ -20,11 +16,7 @@ class BuildApiRequest {
     private Boolean autoAssignRelease;
 
     public String getBuildTool() {
-        return buildTool;
-    }
-
-    public void setBuildTool(String buildTool) {
-        this.buildTool = buildTool;
+        return "bugsnag-maven-plugin";
     }
 
     public String getApiKey() {
