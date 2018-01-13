@@ -4,7 +4,7 @@
 
     <groupId>com.kinbiko</groupId>
     <artifactId>bugsnag-maven-plugin</artifactId>
-    <version>1.0.2</version>
+    <version>2.0.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>Bugsnag Maven Plugin</name>
@@ -31,6 +31,7 @@
     <scm>
         <url>https://github.com/kinbiko/bugsnag-maven-plugin</url>
     </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -91,6 +92,11 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20140107</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.3</version>
         </dependency>
     </dependencies>
 
