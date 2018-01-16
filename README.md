@@ -5,9 +5,22 @@
 
 This [Apache Maven](https://maven.apache.org) plugin informs [Bugsnag](https://www.bugsnag.com) of a new release of your application, requiring only minimum configuration.
 
+## Requirements
+
+To use this third-party Maven plugin you'll need to add `com.kinbiko` as a `pluginGroup` in your `~/.m2/settings.xml`.
+At a bare minimum, your `settings.xml` should look like:
+
+```xml
+<settings>
+  <pluginGroups>
+    <pluginGroup>com.kinbiko</pluginGroup>
+  </pluginGroups>
+</settings>
+```
+
 ## Usage
 
-Under your `build>plugins` tag add the following.
+Under your `build>plugins` tag in the `pom.xml` of your project add the following.
 
 Please see [The official docs](https://bugsnagbuildapi.docs.apiary.io/#reference/0/build/notify-of-a-build)
 for information around what each property means.
@@ -44,6 +57,12 @@ You can notify Bugsnag about a new release of your application through:
 
 ```bash
 mvn bugsnag:release
+```
+
+NOTE: The first time you run this command, you may have to force an update with -U.
+
+```bash
+mvn -U bugsnag:release
 ```
 
 You may also optionally drop the default `releaseStage` with `-Drelease.skipReleaseStage=true`
